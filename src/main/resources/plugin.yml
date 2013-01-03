@@ -7,3 +7,4 @@ name: PVPKarma
 startup: postworld
 url: http://blockmovers.com/
 version: '0.1'
+depend: [TagAPI]
