@@ -8,3 +8,18 @@ startup: postworld
 url: http://blockmovers.com/
 version: '0.1'
 depend: [TagAPI]
+commands:
+  karma:
+    usage: /<command> (action)
+  pvp:
+    usage: /<command> (action)
+permissions:
+  pvpkarma.pvp.toggle:
+    default: false
+  pvpkarma.karma.change:
+    default: false
+  pvpkarma.admin:
+    default: false
+    children:
+      pvpkarma.pvp.toggle: true
+      pvpkarma.karma.change: true
