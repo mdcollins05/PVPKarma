@@ -98,20 +98,14 @@ public class PVPKarma extends JavaPlugin implements Listener {
                         cs.sendMessage(ChatColor.RED + "Karma must be a whole number!");
                         return false;
                     }
-<<<<<<< HEAD
                     this.updateKarma(name, Integer.parseInt(args[2]));
-=======
-                    this.updateKarma(target, Integer.parseInt(args[2]));
->>>>>>> remotes/MattVirt-PVPKarma/master
                     cs.sendMessage(ChatColor.GREEN + "Karma for " + name + " is now " + args[2] + "!");
                     return true;
                 } else {
                     name = this.getPlayerName(args[0], true);
-<<<<<<< HEAD
+
                     if (name == null) {
-=======
-                    if (target == null) {
->>>>>>> remotes/MattVirt-PVPKarma/master
+
                         cs.sendMessage(ChatColor.RED + "Couldn't find player " + args[0] + "!");
                         return false;
                     }
@@ -198,13 +192,8 @@ public class PVPKarma extends JavaPlugin implements Listener {
             return this.getServer().getPlayer(s).getName();
         }
         if (offline) {
-<<<<<<< HEAD
             if (this.getServer().getOfflinePlayer(s).hasPlayedBefore()) {
                 return s;
-=======
-            if (this.getServer().getOfflinePlayer(s) != null) {
-                return this.getServer().getOfflinePlayer(s).getName();
->>>>>>> remotes/MattVirt-PVPKarma/master
             }
         }
         return null;
