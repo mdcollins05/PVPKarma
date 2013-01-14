@@ -4,12 +4,14 @@
  */
 package com.blockmovers.plugins.pvpkarma;
 
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
 import org.kitteh.tag.TagAPI;
@@ -70,11 +72,13 @@ public class Listeners implements Listener {
         this.plugin.updateKarma(killer, this.plugin.getNewKarmaPVPMath(killer.getName(), event.getEntity().getName()));
     }
 
-//    @EventHandler
-//    public void onEntityDeath(EntityDeathEvent event) {
-//        if (event.getEntity().getKiller() == null) {
-//            return;
-//        }
-//        Player p = event.getEntity().getKiller();
-//    }
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        if (event.getEntity().getKiller() == null) {
+            return;
+        }
+        Player p = event.getEntity().getKiller();
+        Integer karma = this.plugin.karma.getKarma(p.getName()) - this.plugin.getMobKarma(event.getEntityType().getName());
+        this.plugin.updateKarma(p.getName(), karma);
+    }
 }

@@ -7,6 +7,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -27,6 +28,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
         pm.registerEvents(new Listeners(this), this);
 
         this.karma.load();
+        this.setMobKarmaList();
 
         log.info(pdffile.getName() + " version " + pdffile.getVersion() + " is enabled.");
     }
@@ -78,7 +80,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
                     PluginDescriptionFile pdf = this.getDescription();
                     cs.sendMessage(pdf.getName() + " " + pdf.getVersion() + " by MDCollins05");
                     return true;
-                } else if (args[0].equalsIgnoreCase("edit")) {
+                } else if (args[0].equalsIgnoreCase("set")) {
                     if (cs instanceof Player) {
                         if (!cs.hasPermission("pvpkarma.karma.change")) {
                             cs.sendMessage(ChatColor.RED + "You don't have permission to do that!");
@@ -156,10 +158,9 @@ public class PVPKarma extends JavaPlugin implements Listener {
     }
 
     public void updateKarma(String p, int k) {
+        this.karma.setKarma(p, k);
         if (this.getServer().getPlayer(p) != null) {
             TagAPI.refreshPlayer(this.getServer().getPlayer(p));
-        } else {
-            this.karma.setKarma(p, k);
         }
     }
 
@@ -207,8 +208,38 @@ public class PVPKarma extends JavaPlugin implements Listener {
             return false;
         }
     }
-//    public int getMobKarma(String mob) {
-//        
-//        }
-//    }
+
+    private void setMobKarmaList() {
+        this.mobKarma.put(EntityType.BLAZE.getName(), -1);
+        this.mobKarma.put(EntityType.CAVE_SPIDER.getName(), 1);
+        this.mobKarma.put(EntityType.CHICKEN.getName(), 1);
+        this.mobKarma.put(EntityType.COW.getName(), 1);
+        this.mobKarma.put(EntityType.CREEPER.getName(), -1);
+        this.mobKarma.put(EntityType.ENDERMAN.getName(), -1);
+        this.mobKarma.put(EntityType.GHAST.getName(), -1);
+        this.mobKarma.put(EntityType.GIANT.getName(), -1);
+        this.mobKarma.put(EntityType.IRON_GOLEM.getName(), 1);
+        this.mobKarma.put(EntityType.MAGMA_CUBE.getName(), -1);
+        this.mobKarma.put(EntityType.MUSHROOM_COW.getName(), 1);
+        this.mobKarma.put(EntityType.OCELOT.getName(), 1);
+        this.mobKarma.put(EntityType.PIG.getName(), 1);
+        this.mobKarma.put(EntityType.PIG_ZOMBIE.getName(), -1);
+        this.mobKarma.put(EntityType.SHEEP.getName(), 1);
+        this.mobKarma.put(EntityType.SILVERFISH.getName(), -1);
+        this.mobKarma.put(EntityType.SKELETON.getName(), -1);
+        this.mobKarma.put(EntityType.SLIME.getName(), -1);
+        this.mobKarma.put(EntityType.SNOWMAN.getName(), 1);
+        this.mobKarma.put(EntityType.SPIDER.getName(), -1);
+        this.mobKarma.put(EntityType.VILLAGER.getName(), 1);
+        this.mobKarma.put(EntityType.WITCH.getName(), -1);
+        this.mobKarma.put(EntityType.WITHER.getName(), -1);
+        this.mobKarma.put(EntityType.ZOMBIE.getName(), -1);
+    }
+
+    public int getMobKarma(String mob) {
+        if (this.mobKarma.containsKey(mob)) {
+            return this.mobKarma.get(mob);
+        }
+        return 0;
+    }
 }
