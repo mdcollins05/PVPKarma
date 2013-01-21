@@ -4,7 +4,6 @@
  */
 package com.blockmovers.plugins.pvpkarma;
 
-import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -14,7 +13,6 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.kitteh.tag.PlayerReceiveNameTagEvent;
-import org.kitteh.tag.TagAPI;
 
 /**
  *
@@ -34,7 +32,7 @@ public class Listeners implements Listener {
         //event.getNamedPlayer() The player who will have the modified tag
         event.setTag(this.plugin.getKarmaColor(event.getNamedPlayer().getName()) + event.getNamedPlayer().getName());
     }
-    
+
     @EventHandler
     public void onEntityDamage(EntityDamageByEntityEvent event) {
         if (event.isCancelled()) {
@@ -60,6 +58,38 @@ public class Listeners implements Listener {
             if (!this.plugin.checkPVP(attacker, (Player) event.getEntity())) {
                 event.setCancelled(true);
             }
+        }
+
+        if (attacker == null) {
+            return;
+        }
+
+        Integer karma = this.plugin.karma.getKarma(attacker.getName());
+        Integer oldDamage = event.getDamage();
+
+        if (this.plugin.isGood(attacker.getName())) {
+            if (this.plugin.chance(karma, 1000)) {
+                Float randomMultiplier = (this.plugin.random(40)) / 100F;
+
+                Integer newDamage = Math.round((oldDamage * randomMultiplier) + oldDamage);
+                if (newDamage == oldDamage) {
+                    newDamage++;
+                }
+                event.setDamage(newDamage);
+                attacker.sendMessage("Attack did " + newDamage + " damage!(rounding up (" + oldDamage + " * " + randomMultiplier + "))");
+            } else {
+                attacker.sendMessage("Attack did " + oldDamage + " damage!");
+            }
+        } else if (this.plugin.isBad(attacker.getName())) {
+            Integer inverse = 1000 - (karma + 1000);
+            if (this.plugin.chance(inverse, 1000)) {
+                event.setDamage(0); //possible the attack "misses"
+                attacker.sendMessage("Attack did 0 damage!(" + oldDamage + ")");
+            } else {
+                attacker.sendMessage("Attack did " + oldDamage + " damage!");
+            }
+        } else {
+            attacker.sendMessage("Attack did " + oldDamage + " damage!");
         }
     }
 

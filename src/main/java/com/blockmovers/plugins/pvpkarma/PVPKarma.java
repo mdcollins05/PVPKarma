@@ -2,6 +2,7 @@ package com.blockmovers.plugins.pvpkarma;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
 import java.util.logging.Logger;
 import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
@@ -18,8 +19,11 @@ import org.kitteh.tag.TagAPI;
 public class PVPKarma extends JavaPlugin implements Listener {
 
     static final Logger log = Logger.getLogger("Minecraft"); //set up our logger
+    private Random randomGenerator = new Random();
     public Karma karma = new Karma(this);
     public Map<String, Integer> mobKarma = new HashMap();
+    public Integer karma_bad = -20;
+    public Integer karma_good = 20;
 
     public void onEnable() {
         PluginDescriptionFile pdffile = this.getDescription();
@@ -125,7 +129,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
     public int getNewKarmaPVPMath(String killer, String killed) {
         int newK = this.getNewKarmaMath(this.karma.getKarma(killer), this.karma.getKarma(killed));
         //if (newK >= 0 && newK <= 1) {
-        newK--;
+        newK = newK - 5;
         //}
         return newK;
     }
@@ -148,13 +152,29 @@ public class PVPKarma extends JavaPlugin implements Listener {
     }
 
     public String getKarmaColor(int k) {
-        if (k >= 20) {
+        if (k >= this.karma_good) {
             return ChatColor.GREEN.toString();
         }
-        if (k <= -20) {
+        if (k <= this.karma_bad) {
             return ChatColor.RED.toString();
         }
         return "";
+    }
+    
+    public Boolean isGood(String p) {
+        Integer k = this.karma.getKarma(p);
+        if (k >= this.karma_good) {
+            return true;
+        }
+        return false;
+    }
+    
+    public Boolean isBad(String p) {
+        Integer k = this.karma.getKarma(p);
+        if (k <= this.karma_bad) {
+            return true;
+        }
+        return false;
     }
 
     public void updateKarma(String p, int k) {
@@ -172,7 +192,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
     public boolean checkPVP(Player attacker, Player attacked) {
         String attackerName = attacker.getName();
         String attackedName = attacked.getName();
-        if (!attacker.getGameMode().equals(GameMode.SURVIVAL)) {
+        if (attacker.getGameMode().equals(GameMode.CREATIVE)) {
             return false;
         }
 
@@ -241,5 +261,19 @@ public class PVPKarma extends JavaPlugin implements Listener {
             return this.mobKarma.get(mob);
         }
         return 0;
+    }
+    
+    public boolean chance(Integer percent, Integer ceiling) {
+        Integer randomInt = this.random(ceiling);
+        if (randomInt < percent) {
+            return true;
+        }
+        return false;
+    }
+
+    public Integer random(Integer ceil) {
+        Integer randomInt = this.randomGenerator.nextInt(ceil * 1000); //moar random?
+        Integer value = randomInt / 1000; //I think so, so now we fix that and round
+        return value;
     }
 }
