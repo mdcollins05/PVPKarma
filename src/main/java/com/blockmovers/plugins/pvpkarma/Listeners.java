@@ -76,20 +76,20 @@ public class Listeners implements Listener {
                     newDamage++;
                 }
                 event.setDamage(newDamage);
-                attacker.sendMessage("Attack did " + newDamage + " damage!(rounding up (" + oldDamage + " * " + randomMultiplier + "))");
+                //attacker.sendMessage("Attack did " + newDamage + " damage!(rounding up (" + oldDamage + " * " + randomMultiplier + "))");
             } else {
-                attacker.sendMessage("Attack did " + oldDamage + " damage!");
+                //attacker.sendMessage("Attack did " + oldDamage + " damage!");
             }
         } else if (this.plugin.isBad(attacker.getName())) {
             Integer inverse = 1000 - (karma + 1000);
             if (this.plugin.chance(inverse, 1000)) {
                 event.setDamage(0); //possible the attack "misses"
-                attacker.sendMessage("Attack did 0 damage!(" + oldDamage + ")");
+                //attacker.sendMessage("Attack did 0 damage!(" + oldDamage + ")");
             } else {
-                attacker.sendMessage("Attack did " + oldDamage + " damage!");
+                //attacker.sendMessage("Attack did " + oldDamage + " damage!");
             }
         } else {
-            attacker.sendMessage("Attack did " + oldDamage + " damage!");
+            //attacker.sendMessage("Attack did " + oldDamage + " damage!");
         }
     }
 
