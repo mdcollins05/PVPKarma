@@ -52,20 +52,20 @@ public class PVPKarma extends JavaPlugin implements Listener {
                     PluginDescriptionFile pdf = this.getDescription();
                     cs.sendMessage(pdf.getName() + " " + pdf.getVersion() + " by MDCollins05");
                     return true;
-                } else if (args[0].equalsIgnoreCase("toggle") || args[0].equalsIgnoreCase("t")) {
-                    if (cs instanceof Player) {
-                        Player s = (Player) cs;
-                        if (s.hasPermission("pvpkarma.pvp.toggle") || this.karma.getPVP(s.getName())) {
-                            target = (Player) s;
-                        } else {
-                            s.sendMessage(ChatColor.RED + "You don't have permission to do that!");
-                            return false;
-                        }
+                } else {
+                    return false;
+                }
+            } else {
+                if (cs instanceof Player) {
+                    Player s = (Player) cs;
+                    if (s.hasPermission("pvpkarma.pvp.toggle") || this.karma.getPVP(s.getName())) {
+                        target = (Player) s;
                     } else {
-                        cs.sendMessage(ChatColor.RED + "Console cannot run that command.");
+                        s.sendMessage(ChatColor.RED + "You don't have permission to do that!");
                         return false;
                     }
                 } else {
+                    cs.sendMessage(ChatColor.RED + "Console cannot run that command.");
                     return false;
                 }
                 if (this.karma.togglePVP(target.getName())) {
@@ -73,8 +73,6 @@ public class PVPKarma extends JavaPlugin implements Listener {
                 } else {
                     cs.sendMessage(ChatColor.GREEN + "PVP enabled!");
                 }
-            } else {
-                return false;
             }
             return true;
         }
@@ -160,7 +158,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
         }
         return "";
     }
-    
+
     public Boolean isGood(String p) {
         Integer k = this.karma.getKarma(p);
         if (k >= this.karma_good) {
@@ -168,7 +166,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
         }
         return false;
     }
-    
+
     public Boolean isBad(String p) {
         Integer k = this.karma.getKarma(p);
         if (k <= this.karma_bad) {
@@ -202,7 +200,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
         }
 
         if (this.karma.getPVP(attackerName)) {
-            attacker.sendMessage(ChatColor.RED + "You have disabled PVP! Use /pvp toggle to change your mode!");
+            attacker.sendMessage(ChatColor.RED + "You have disabled PVP! Use /pvp to change your mode!");
             return false;
         }
         return true;
@@ -262,7 +260,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
         }
         return 0;
     }
-    
+
     public boolean chance(Integer percent, Integer ceiling) {
         Integer randomInt = this.random(ceiling);
         if (randomInt < percent) {

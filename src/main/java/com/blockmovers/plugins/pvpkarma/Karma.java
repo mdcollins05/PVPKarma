@@ -59,6 +59,9 @@ public class Karma {
     }
     
     public void setKarma(String p, int k) {
+        if (k > 1000) {
+            k = 1000;
+        }
         if (k == 0) {
             this.karma.set("karma." + p, null);
         } else {
