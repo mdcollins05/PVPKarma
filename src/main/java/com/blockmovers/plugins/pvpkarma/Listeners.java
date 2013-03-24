@@ -64,11 +64,11 @@ public class Listeners implements Listener {
             return;
         }
 
-        Integer karma = this.plugin.karma.getKarma(attacker.getName());
+        double karma = this.plugin.karma.getKarma(attacker.getName());
         Integer oldDamage = event.getDamage();
 
         if (this.plugin.isGood(attacker.getName())) {
-            if (this.plugin.chance(karma, 1000)) {
+            if (this.plugin.chance((int)karma, 1000)) {
                 Float randomMultiplier = (this.plugin.random(40)) / 100F;
 
                 Integer newDamage = Math.round((oldDamage * randomMultiplier) + oldDamage);
@@ -81,8 +81,8 @@ public class Listeners implements Listener {
                 //attacker.sendMessage("Attack did " + oldDamage + " damage!");
             }
         } else if (this.plugin.isBad(attacker.getName())) {
-            Integer inverse = 1000 - (karma + 1000);
-            if (this.plugin.chance(inverse, 1000)) {
+            double inverse = 1000 - (karma + 1000);
+            if (this.plugin.chance((int)inverse, 1000)) {
                 event.setDamage(0); //possible the attack "misses"
                 //attacker.sendMessage("Attack did 0 damage!(" + oldDamage + ")");
             } else {
@@ -108,7 +108,7 @@ public class Listeners implements Listener {
             return;
         }
         Player p = event.getEntity().getKiller();
-        Integer karma = this.plugin.karma.getKarma(p.getName()) - this.plugin.getMobKarma(event.getEntityType().getName());
+        double karma = this.plugin.karma.getKarma(p.getName()) - this.plugin.getMobKarma(event.getEntityType().getName());
         this.plugin.updateKarma(p.getName(), karma);
     }
 }

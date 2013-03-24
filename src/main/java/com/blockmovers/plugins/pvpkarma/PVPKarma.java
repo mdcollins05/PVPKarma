@@ -113,10 +113,10 @@ public class PVPKarma extends JavaPlugin implements Listener {
                         cs.sendMessage(ChatColor.RED + "Couldn't find player " + args[0] + "!");
                         return false;
                     }
-                    cs.sendMessage(ChatColor.GREEN + "Karma for " + name + " is " + this.karma.getKarma(name) + "!");
+                    cs.sendMessage(ChatColor.GREEN + "Karma for " + name + " is " + ((int) this.karma.getKarma(name)) + "!");
                 }
             } else {
-                cs.sendMessage(ChatColor.GREEN + "Your karma rating is " + this.karma.getKarma(cs.getName()) + "!");
+                cs.sendMessage(ChatColor.GREEN + "Your karma rating is " + ((int) this.karma.getKarma(cs.getName())) + "!");
                 return true;
             }
             return true;
@@ -124,19 +124,19 @@ public class PVPKarma extends JavaPlugin implements Listener {
         return false;
     }
 
-    public int getNewKarmaPVPMath(String killer, String killed) {
-        int newK = this.getNewKarmaMath(this.karma.getKarma(killer), this.karma.getKarma(killed));
+    public double getNewKarmaPVPMath(String killer, String killed) {
+        double newK = this.getNewKarmaMath(this.karma.getKarma(killer), this.karma.getKarma(killed));
         //if (newK >= 0 && newK <= 1) {
         newK = newK - 5;
         //}
         return newK;
     }
 
-    public int getNewKarmaMath(int killer, int killed) {
+    public double getNewKarmaMath(double killer, double killed) {
         return (((killer - killed) / 10) + killer);
     }
 
-    public String getNewKarmaMsg(int oldK, int newK) {
+    public String getNewKarmaMsg(double oldK, double newK) {
         if (oldK > newK) {
             return (ChatColor.RED + "You probably shouldn't have done that.");
         } else if (oldK < newK) {
@@ -149,7 +149,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
         return this.getKarmaColor(this.karma.getKarma(p));
     }
 
-    public String getKarmaColor(int k) {
+    public String getKarmaColor(double k) {
         if (k >= this.karma_good) {
             return ChatColor.GREEN.toString();
         }
@@ -160,7 +160,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
     }
 
     public Boolean isGood(String p) {
-        Integer k = this.karma.getKarma(p);
+        double k = this.karma.getKarma(p);
         if (k >= this.karma_good) {
             return true;
         }
@@ -168,21 +168,21 @@ public class PVPKarma extends JavaPlugin implements Listener {
     }
 
     public Boolean isBad(String p) {
-        Integer k = this.karma.getKarma(p);
+        double k = this.karma.getKarma(p);
         if (k <= this.karma_bad) {
             return true;
         }
         return false;
     }
 
-    public void updateKarma(String p, int k) {
+    public void updateKarma(String p, double k) {
         this.karma.setKarma(p, k);
         if (this.getServer().getPlayer(p) != null) {
             TagAPI.refreshPlayer(this.getServer().getPlayer(p));
         }
     }
 
-    public void updateKarma(Player p, int k) {
+    public void updateKarma(Player p, double k) {
         this.karma.setKarma(p.getName(), k);
         TagAPI.refreshPlayer(p);
     }

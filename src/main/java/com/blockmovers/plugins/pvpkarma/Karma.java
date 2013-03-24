@@ -54,11 +54,11 @@ public class Karma {
         }
     }
     
-    public int getKarma(String p) {
-        return this.karma.getInt("karma." + p, 0);
+    public double getKarma(String p) {
+        return this.karma.getDouble("karma." + p, 0);
     }
     
-    public void setKarma(String p, int k) {
+    public void setKarma(String p, double k) {
         if (k > 1000) {
             k = 1000;
         }
