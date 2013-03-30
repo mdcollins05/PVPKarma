@@ -8,7 +8,10 @@ import org.bukkit.ChatColor;
 import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Animals;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -21,7 +24,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
     static final Logger log = Logger.getLogger("Minecraft"); //set up our logger
     private Random randomGenerator = new Random();
     public Karma karma = new Karma(this);
-    public Map<String, Integer> mobKarma = new HashMap();
+    public Map<String, Double> mobKarma = new HashMap();
     public Integer karma_bad = -20;
     public Integer karma_good = 20;
 
@@ -32,7 +35,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
         pm.registerEvents(new Listeners(this), this);
 
         this.karma.load();
-        this.setMobKarmaList();
+        //this.setMobKarmaList();
 
         log.info(pdffile.getName() + " version " + pdffile.getVersion() + " is enabled.");
     }
@@ -227,36 +230,37 @@ public class PVPKarma extends JavaPlugin implements Listener {
         }
     }
 
-    private void setMobKarmaList() {
-        this.mobKarma.put(EntityType.BLAZE.getName(), -1);
-        this.mobKarma.put(EntityType.CAVE_SPIDER.getName(), 1);
-        this.mobKarma.put(EntityType.CHICKEN.getName(), 1);
-        this.mobKarma.put(EntityType.COW.getName(), 1);
-        this.mobKarma.put(EntityType.CREEPER.getName(), -1);
-        this.mobKarma.put(EntityType.ENDERMAN.getName(), -1);
-        this.mobKarma.put(EntityType.GHAST.getName(), -1);
-        this.mobKarma.put(EntityType.GIANT.getName(), -1);
-        this.mobKarma.put(EntityType.IRON_GOLEM.getName(), 1);
-        this.mobKarma.put(EntityType.MAGMA_CUBE.getName(), -1);
-        this.mobKarma.put(EntityType.MUSHROOM_COW.getName(), 1);
-        this.mobKarma.put(EntityType.OCELOT.getName(), 1);
-        this.mobKarma.put(EntityType.PIG.getName(), 1);
-        this.mobKarma.put(EntityType.PIG_ZOMBIE.getName(), -1);
-        this.mobKarma.put(EntityType.SHEEP.getName(), 1);
-        this.mobKarma.put(EntityType.SILVERFISH.getName(), -1);
-        this.mobKarma.put(EntityType.SKELETON.getName(), -1);
-        this.mobKarma.put(EntityType.SLIME.getName(), -1);
-        this.mobKarma.put(EntityType.SNOWMAN.getName(), 1);
-        this.mobKarma.put(EntityType.SPIDER.getName(), -1);
-        this.mobKarma.put(EntityType.VILLAGER.getName(), 1);
-        this.mobKarma.put(EntityType.WITCH.getName(), -1);
-        this.mobKarma.put(EntityType.WITHER.getName(), -1);
-        this.mobKarma.put(EntityType.ZOMBIE.getName(), -1);
-    }
-
-    public int getMobKarma(String mob) {
-        if (this.mobKarma.containsKey(mob)) {
-            return this.mobKarma.get(mob);
+//    private void setMobKarmaList() {
+//        this.mobKarma.put(EntityType.BLAZE.getName(), -.1);
+//        this.mobKarma.put(EntityType.CAVE_SPIDER.getName(), -.1);
+//        this.mobKarma.put(EntityType.CHICKEN.getName(), .1);
+//        this.mobKarma.put(EntityType.COW.getName(), .1);
+//        this.mobKarma.put(EntityType.CREEPER.getName(), -.1);
+//        this.mobKarma.put(EntityType.ENDERMAN.getName(), -.1);
+//        this.mobKarma.put(EntityType.GHAST.getName(), -.1);
+//        this.mobKarma.put(EntityType.GIANT.getName(), -.1);
+//        this.mobKarma.put(EntityType.IRON_GOLEM.getName(), .1);
+//        this.mobKarma.put(EntityType.MAGMA_CUBE.getName(), -.1);
+//        this.mobKarma.put(EntityType.MUSHROOM_COW.getName(), .1);
+//        this.mobKarma.put(EntityType.OCELOT.getName(), .1);
+//        this.mobKarma.put(EntityType.PIG.getName(), .1);
+//        this.mobKarma.put(EntityType.PIG_ZOMBIE.getName(), -.1);
+//        this.mobKarma.put(EntityType.SHEEP.getName(), .1);
+//        this.mobKarma.put(EntityType.SILVERFISH.getName(), -.1);
+//        this.mobKarma.put(EntityType.SKELETON.getName(), -.1);
+//        this.mobKarma.put(EntityType.SLIME.getName(), -.1);
+//        this.mobKarma.put(EntityType.SNOWMAN.getName(), .1);
+//        this.mobKarma.put(EntityType.SPIDER.getName(), -.1);
+//        this.mobKarma.put(EntityType.VILLAGER.getName(), .1);
+//        this.mobKarma.put(EntityType.WITCH.getName(), -.1);
+//        this.mobKarma.put(EntityType.WITHER.getName(), -.1);
+//        this.mobKarma.put(EntityType.ZOMBIE.getName(), -.1);
+//    }
+    public double getMobKarma(LivingEntity entity) {
+        if (entity instanceof Animals) {
+            return .1;
+        } else if (entity instanceof Monster) {
+            return -.1;
         }
         return 0;
     }

@@ -4,9 +4,11 @@
  */
 package com.blockmovers.plugins.pvpkarma;
 
+import org.bukkit.entity.Arrow;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
+import org.bukkit.entity.ThrownPotion;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
@@ -39,15 +41,20 @@ public class Listeners implements Listener {
             return;
         }
 
-        Entity att = event.getDamager();
         Player attacker = null;
-        if (att instanceof Player) {
-            attacker = (Player) att;
-        } else if (att instanceof Projectile) {
-            Projectile arr = (Projectile) att;
-            Entity e = arr.getShooter();
-            if (e instanceof Player) {
-                attacker = (Player) e;
+        Arrow arrow = null;
+        Entity damageSource = event.getDamager();
+        if (damageSource instanceof Player) {
+            attacker = (Player) damageSource;
+        } else if (damageSource instanceof Arrow) {
+            arrow = (Arrow) damageSource;
+            if (arrow.getShooter() instanceof Player) {
+                attacker = (Player) arrow.getShooter();
+            }
+        } else if (damageSource instanceof ThrownPotion) {
+            ThrownPotion potion = (ThrownPotion) damageSource;
+            if (potion.getShooter() instanceof Player) {
+                attacker = (Player) potion.getShooter();
             }
         }
 
@@ -68,7 +75,7 @@ public class Listeners implements Listener {
         Integer oldDamage = event.getDamage();
 
         if (this.plugin.isGood(attacker.getName())) {
-            if (this.plugin.chance((int)karma, 1000)) {
+            if (this.plugin.chance((int) karma, 1000)) {
                 Float randomMultiplier = (this.plugin.random(40)) / 100F;
 
                 Integer newDamage = Math.round((oldDamage * randomMultiplier) + oldDamage);
@@ -82,7 +89,7 @@ public class Listeners implements Listener {
             }
         } else if (this.plugin.isBad(attacker.getName())) {
             double inverse = 1000 - (karma + 1000);
-            if (this.plugin.chance((int)inverse, 1000)) {
+            if (this.plugin.chance((int) inverse, 1000)) {
                 event.setDamage(0); //possible the attack "misses"
                 //attacker.sendMessage("Attack did 0 damage!(" + oldDamage + ")");
             } else {
@@ -108,7 +115,7 @@ public class Listeners implements Listener {
             return;
         }
         Player p = event.getEntity().getKiller();
-        double karma = this.plugin.karma.getKarma(p.getName()) - this.plugin.getMobKarma(event.getEntityType().getName());
+        double karma = this.plugin.karma.getKarma(p.getName()) - this.plugin.getMobKarma(event.getEntity());
         this.plugin.updateKarma(p.getName(), karma);
     }
 }
