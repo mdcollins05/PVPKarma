@@ -9,7 +9,6 @@ import org.bukkit.GameMode;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Animals;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
@@ -148,6 +147,13 @@ public class PVPKarma extends JavaPlugin implements Listener {
         return null;
     }
 
+    public boolean hasKarmaChanged(Double oK, Double nK) {
+        if (this.getKarmaColor(oK).equals(this.getKarmaColor(nK))) {
+            return true;
+        }
+        return false;
+    }
+
     public String getKarmaColor(String p) {
         return this.getKarmaColor(this.karma.getKarma(p));
     }
@@ -179,15 +185,17 @@ public class PVPKarma extends JavaPlugin implements Listener {
     }
 
     public void updateKarma(String p, double k) {
+        Double oK = this.karma.getKarma(p);
         this.karma.setKarma(p, k);
         if (this.getServer().getPlayer(p) != null) {
-            TagAPI.refreshPlayer(this.getServer().getPlayer(p));
+            if (this.hasKarmaChanged(oK, k)) {
+                TagAPI.refreshPlayer(this.getServer().getPlayer(p));
+            }
         }
     }
 
     public void updateKarma(Player p, double k) {
-        this.karma.setKarma(p.getName(), k);
-        TagAPI.refreshPlayer(p);
+        this.updateKarma(p.getName(), k);
     }
 
     public boolean checkPVP(Player attacker, Player attacked) {
