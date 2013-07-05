@@ -70,12 +70,12 @@ public class Listeners implements Listener {
             return;
         }
 
-        double karma = this.plugin.karma.getKarma(attacker.getName());
+        int karma = this.plugin.karma.getKarma(attacker.getName());
         Integer oldDamage = event.getDamage();
 
         if (this.plugin.isGood(attacker.getName())) {
-            if (this.plugin.chance((int) karma, 1000)) {
-                Float randomMultiplier = (this.plugin.random(40)) / 100F;
+            if (this.plugin.chance((int) karma, plugin.karma_max)) {
+                Float randomMultiplier = (this.plugin.random(100)) / 100F;
 
                 Integer newDamage = Math.round((oldDamage * randomMultiplier) + oldDamage);
                 if (newDamage == oldDamage) {
@@ -87,10 +87,10 @@ public class Listeners implements Listener {
                 //attacker.sendMessage("Attack did " + oldDamage + " damage!");
             }
         } else if (this.plugin.isBad(attacker.getName())) {
-            double inverse = 1000 - (karma + 1000);
-            if (this.plugin.chance((int) inverse, 1000)) {
-                event.setDamage(0); //possible the attack "misses"
-                //attacker.sendMessage("Attack did 0 damage!(" + oldDamage + ")");
+            int inverse = plugin.karma_max - (karma + plugin.karma_max);
+            if (this.plugin.chance(inverse, plugin.karma_max)) {
+                event.setDamage(1); //possible the attack "misses"
+                //attacker.sendMessage("Attack did 1 damage!(" + oldDamage + ")");
             } else {
                 //attacker.sendMessage("Attack did " + oldDamage + " damage!");
             }
@@ -101,10 +101,12 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
-        if (event.getEntity().getKiller() == null) {
+        Player p = event.getEntity();
+        if (p.getKiller() == null || p.getKiller().equals(p) || p.hasPermission("pvpkarma.exempt")) {
             return;
         }
         Player killer = event.getEntity().getKiller();
+        this.plugin.karma.setKills(killer.getName(), this.plugin.karma.getKills(killer.getName()) + 1);
         this.plugin.updateKarma(killer, this.plugin.getNewKarmaPVPMath(killer.getName(), event.getEntity().getName()));
     }
 
@@ -114,7 +116,7 @@ public class Listeners implements Listener {
             return;
         }
         Player p = event.getEntity().getKiller();
-        double karma = this.plugin.karma.getKarma(p.getName()) - this.plugin.getMobKarma(event.getEntity());
+        int karma = this.plugin.karma.getKarma(p.getName()) - this.plugin.getMobKarma(event.getEntity());
         this.plugin.updateKarma(p.getName(), karma);
     }
 }

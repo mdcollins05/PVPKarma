@@ -23,3 +23,5 @@ permissions:
     children:
       pvpkarma.pvp.toggle: true
       pvpkarma.karma.change: true
+  pvpkarma.exempt:
+    default: false

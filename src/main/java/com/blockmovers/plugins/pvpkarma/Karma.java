@@ -54,18 +54,31 @@ public class Karma {
         }
     }
     
-    public double getKarma(String p) {
-        return this.karma.getDouble("karma." + p, 0);
+    public int getKarma(String p) {
+        return this.karma.getInt("karma." + p, 0);
     }
     
-    public void setKarma(String p, double k) {
-        if (k > 1000) {
-            k = 1000;
+    public void setKarma(String p, int k) {
+        if (k > plugin.karma_max) {
+            k = plugin.karma_max;
         }
         if (k == 0) {
             this.karma.set("karma." + p, null);
         } else {
             this.karma.set("karma." + p, k);
+        }
+        this.save();
+    }
+    
+    public int getKills(String p) {
+        return this.karma.getInt("kills." + p, 0);
+    }
+    
+    public void setKills(String p, int k) {
+        if (k == 0) {
+            this.karma.set("kills." + p, null);
+        } else {
+            this.karma.set("kills." + p, k);
         }
         this.save();
     }

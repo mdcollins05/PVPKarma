@@ -23,9 +23,10 @@ public class PVPKarma extends JavaPlugin implements Listener {
     static final Logger log = Logger.getLogger("Minecraft"); //set up our logger
     private Random randomGenerator = new Random();
     public Karma karma = new Karma(this);
-    public Map<String, Double> mobKarma = new HashMap();
-    public Integer karma_bad = -20;
-    public Integer karma_good = 20;
+    public Map<String, Integer> mobKarma = new HashMap();
+    public Integer karma_bad = -1000;
+    public Integer karma_good = 1000;
+    public Integer karma_max = 100000;
 
     public void onEnable() {
         PluginDescriptionFile pdffile = this.getDescription();
@@ -115,30 +116,25 @@ public class PVPKarma extends JavaPlugin implements Listener {
                         cs.sendMessage(ChatColor.RED + "Couldn't find player " + args[0] + "!");
                         return false;
                     }
-                    cs.sendMessage(ChatColor.GREEN + "Karma for " + name + " is " + ((int) this.karma.getKarma(name)) + "!");
+                    cs.sendMessage(ChatColor.GREEN + "Karma for " + name + " is " + ((int) this.karma.getKarma(name)) + "! (" + this.karma.getKills(name) + " kills)");
                 }
             } else {
-                cs.sendMessage(ChatColor.GREEN + "Your karma rating is " + ((int) this.karma.getKarma(cs.getName())) + "!");
+                cs.sendMessage(this.getKarmaColor(cs.getName()) + "Your karma rating is " + ((int) this.karma.getKarma(cs.getName())) + "!");
                 return true;
             }
             return true;
         }
         return false;
     }
-
-    public double getNewKarmaPVPMath(String killer, String killed) {
-        double newK = this.getNewKarmaMath(this.karma.getKarma(killer), this.karma.getKarma(killed));
-        //if (newK >= 0 && newK <= 1) {
-        newK = newK - 5;
-        //}
-        return newK;
+    
+    public int getNewKarmaPVPMath(String killer, String killed) {
+        int killerK = this.karma.getKarma(killer);
+        int killedK = this.karma.getKarma(killed);
+        int killerKills = this.karma.getKills(killer);
+        return killerK - (killerKills * 2500);
     }
 
-    public double getNewKarmaMath(double killer, double killed) {
-        return (((killer - killed) / 10) + killer);
-    }
-
-    public String getNewKarmaMsg(double oldK, double newK) {
+    public String getNewKarmaMsg(int oldK, int newK) {
         if (oldK > newK) {
             return (ChatColor.RED + "You probably shouldn't have done that.");
         } else if (oldK < newK) {
@@ -147,18 +143,18 @@ public class PVPKarma extends JavaPlugin implements Listener {
         return null;
     }
 
-    public boolean hasKarmaChanged(Double oK, Double nK) {
-        if (this.getKarmaColor(oK).equals(this.getKarmaColor(nK))) {
-            return true;
+    public boolean hasKarmaChanged(int oK, int nK) {
+        if (this.getKarmaColor(oK).equalsIgnoreCase(this.getKarmaColor(nK))) {
+            return false;
         }
-        return false;
+        return true;
     }
 
     public String getKarmaColor(String p) {
         return this.getKarmaColor(this.karma.getKarma(p));
     }
 
-    public String getKarmaColor(double k) {
+    public String getKarmaColor(int k) {
         if (k >= this.karma_good) {
             return ChatColor.GREEN.toString();
         }
@@ -169,7 +165,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
     }
 
     public Boolean isGood(String p) {
-        double k = this.karma.getKarma(p);
+        int k = this.karma.getKarma(p);
         if (k >= this.karma_good) {
             return true;
         }
@@ -177,15 +173,15 @@ public class PVPKarma extends JavaPlugin implements Listener {
     }
 
     public Boolean isBad(String p) {
-        double k = this.karma.getKarma(p);
+        int k = this.karma.getKarma(p);
         if (k <= this.karma_bad) {
             return true;
         }
         return false;
     }
 
-    public void updateKarma(String p, double k) {
-        Double oK = this.karma.getKarma(p);
+    public void updateKarma(String p, int k) {
+        int oK = this.karma.getKarma(p);
         this.karma.setKarma(p, k);
         if (this.getServer().getPlayer(p) != null) {
             if (this.hasKarmaChanged(oK, k)) {
@@ -194,7 +190,7 @@ public class PVPKarma extends JavaPlugin implements Listener {
         }
     }
 
-    public void updateKarma(Player p, double k) {
+    public void updateKarma(Player p, int k) {
         this.updateKarma(p.getName(), k);
     }
 
@@ -264,11 +260,11 @@ public class PVPKarma extends JavaPlugin implements Listener {
 //        this.mobKarma.put(EntityType.WITHER.getName(), -.1);
 //        this.mobKarma.put(EntityType.ZOMBIE.getName(), -.1);
 //    }
-    public double getMobKarma(LivingEntity entity) {
+    public int getMobKarma(LivingEntity entity) {
         if (entity instanceof Animals) {
-            return .1;
+            return 1;
         } else if (entity instanceof Monster) {
-            return -.1;
+            return -1;
         }
         return 0;
     }
