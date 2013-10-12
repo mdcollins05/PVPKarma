@@ -6,7 +6,7 @@ main: com.blockmovers.plugins.pvpkarma.PVPKarma
 name: PVPKarma
 startup: postworld
 url: http://blockmovers.com/
-version: '0.1'
+version: '${version}'
 depend: [TagAPI]
 commands:
   karma:
