@@ -2,7 +2,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.blockmovers.plugins.pvpkarma</groupId>
     <artifactId>PVPKarma</artifactId>
-    <version>2</version>
+    <version>${env.BUILD_NUMBER}</version>
     <name>PVPKarma</name>
     <url>http://blockmovers.com/</url>
     <repositories>
@@ -10,19 +10,13 @@
             <id>bukkit-repo</id>
             <url>http://repo.bukkit.org/content/groups/public</url>
         </repository>
+        <repository>
+            <id>tagapi-repo</id>
+            <url>http://repo.kitteh.org/content/repositories/public/</url>
+        </repository>
     </repositories>
-    <pluginRepositories>
-        <pluginRepository>
-            <id>autoincrement-versions-maven-plugin</id>
-            <name>autoincrement-versions-maven-plugin</name>
-            <url>http://autoincrement-versions-maven-plugin.googlecode.com/svn/repo</url>
-            <snapshots>
-                <enabled>true</enabled>
-            </snapshots>
-        </pluginRepository>
-    </pluginRepositories>
     <build>
-        <finalName>${artifactId}</finalName>
+        <finalName>${project.artifactId}</finalName>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -32,24 +26,6 @@
                     <source>1.5</source>
                     <target>1.5</target>
                 </configuration>
-            </plugin>
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>autoincrement-versions-maven-plugin</artifactId>
-                <version>2.0-SNAPSHOT</version>
-                <executions>
-                    <execution>
-                        <id>update-pom-versions</id>
-                        <goals>
-                            <goal>increment</goal>
-                            <goal>commit</goal>
-                        </goals>
-                        <phase>compile</phase>
-                        <configuration>
-                            <autoIncrementVersion>true</autoIncrementVersion>
-                        </configuration>
-                    </execution>
-                </executions>
             </plugin>
         </plugins>
         <resources>
@@ -70,9 +46,9 @@
         <dependency>
             <groupId>org.kitteh.tag</groupId>
             <artifactId>TagAPI</artifactId>
-            <version>2.3</version>
-            <scope>system</scope>
-            <systemPath>${project.basedir}/lib/TagAPI.jar</systemPath>
+            <version>3.0</version>
+            <type>jar</type>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 </project>
