@@ -45,7 +45,7 @@
         </dependency>
         <dependency>
             <groupId>org.kitteh.tag</groupId>
-            <artifactId>TagAPI</artifactId>
+            <artifactId>tagapi</artifactId>
             <version>3.0</version>
             <type>jar</type>
             <scope>compile</scope>
