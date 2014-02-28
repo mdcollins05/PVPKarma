@@ -44,7 +44,7 @@
             <scope>compile</scope>
         </dependency>
         <dependency>
-            <groupId>org.kitteh.tagapi</groupId>
+            <groupId>org.kitteh</groupId>
             <artifactId>tagapi</artifactId>
             <version>3.0</version>
             <type>jar</type>
